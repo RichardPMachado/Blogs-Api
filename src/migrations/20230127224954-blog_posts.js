@@ -20,13 +20,13 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
         field: 'user_id',
         references: {
           model:'users', // a model indica a tabela em que o userId faz referência
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       created_at: {  
         field: 'published',
@@ -38,11 +38,10 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false
       }
-    });
+    })
   },  
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('blog_posts');
-    
+    await queryInterface.dropTable('blog_posts');  
   }
 };
