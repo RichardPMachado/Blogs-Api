@@ -8,7 +8,7 @@ const createUser = async ({ displayName, email, password, image }) => {
   
   await User.create({ displayName, email, password, image });
   
-  const user = User.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email } });
   if (user) return { type: 'EXISTING_USER_CONFLICT', message: 'User already registered' };
 
   await User.create({ displayName, email, password, image });
