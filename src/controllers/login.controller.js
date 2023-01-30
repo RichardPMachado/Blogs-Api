@@ -5,7 +5,7 @@ const createLogin = async (req, res) => {
   const { type, message } = await loginService.createLogin({ email, password });
   if (type) return res.status(400).json({ message });
   const token = message;
-  return res.status(201).json({ token });
+  return res.status(200).json({ token });
 };
 
 module.exports = {
