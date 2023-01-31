@@ -10,17 +10,18 @@ module.exports = {
         autoIncrement: true,
       },
       title: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(255),
         allowNull: false
       },
       content: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(255),
         allowNull: false
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         field: 'user_id',
+        foreignKey: true,
         references: {
           model:'users', // a model indica a tabela em que o userId faz referência
           key: 'id'
@@ -28,15 +29,15 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      created_at: {  
-        field: 'published',
+      published: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: new Date,
       },
-      updated_at: {
-        field: 'updated',
+      updated: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: new Date,
       }
     })
   },  

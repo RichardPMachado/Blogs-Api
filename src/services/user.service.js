@@ -23,11 +23,11 @@ const getAllUsers = async () => {
 };
 
 const getUserById = async (id) => {
-  const user = await User.findOne({
-    where: { id },
+  const user = await User.findByPk(id, {
     attributes: { exclude: ['password'] },
   });
   if (!user) return { type: 'USER_NOT_FOUND', message: 'User does not exist' };
+  delete user.password;
   return { type: null, message: user };
 };
 
