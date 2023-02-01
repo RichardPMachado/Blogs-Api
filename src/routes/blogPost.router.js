@@ -8,5 +8,5 @@ const router = express.Router();
 router.get('/', authorizationUser, blogPostController.getAllPosts);
 router.get('/:id', authorizationUser, blogPostController.getPostByid);
 router.post('/', authorizationUser, validatePost, blogPostController.createBlogPost);
-
+router.delete('/:id', authorizationUser, blogPostController.deletePost);
 module.exports = router;
