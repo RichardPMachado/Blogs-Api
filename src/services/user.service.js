@@ -11,14 +11,16 @@ const createUser = async ({ displayName, email, password, image }) => {
 
   await User.create({ displayName, email, password, image });
 
-  return { type: null, message: generateToken({ email }) };
+  const createdUser = await User.findOne({
+    where: { email, password } });
+    console.log(createdUser);
+  return { type: null, message: generateToken(createdUser.dataValues) };
 };
 
 const getAllUsers = async () => {
   const users = await User.findAll({
     attributes: { exclude: ['password'] },
   });
-  console.log(users);
   return users;
 };
 
