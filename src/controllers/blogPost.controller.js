@@ -5,10 +5,11 @@ const createBlogPost = async (req, res) => {
   const { title, content, categoryIds } = req.body;
   const { authorization } = req.headers;
 
-  const post = await blogPostService.createBlogPost({ title, content, categoryIds, authorization });
-  console.log('a', post);
-  if (post.type) return res.status(mapError(post.type)).json(post.message);
-  return res.status(201).json(post.message);
+  const { type, message } = await blogPostService
+    .createBlogPost({ title, content, categoryIds, authorization });
+    if (type) return res.status(mapError(type)).json({ message });
+    console.log('a', type, message);
+  return res.status(201).json(message);
 };
 
 const getAllPosts = async (_req, res) => {

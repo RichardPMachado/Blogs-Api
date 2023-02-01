@@ -13,7 +13,6 @@ const createUser = async ({ displayName, email, password, image }) => {
 
   const createdUser = await User.findOne({
     where: { email, password } });
-    console.log(createdUser);
   return { type: null, message: generateToken(createdUser.dataValues) };
 };
 

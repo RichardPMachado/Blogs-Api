@@ -2,30 +2,29 @@ const { BlogPost,
     sequelize,
     User,
     Category,
+    PostCategory,
   } = require('../models');
 const decodeToken = require('../token/decodeToken');
 
 const createBlogPost = async ({ title, content, categoryIds, authorization }) => {
   const user = await decodeToken(authorization);
-  // console.log('aaa', user);
   const categoriesPromises = await categoryIds
   .map((categoryId) => Category.findByPk(categoryId));
-
   const categories = await Promise.all(categoriesPromises);
   const isCategories = categories.every((item) => item);
-
-  if (!isCategories) return { type: 400, message: 'one or more "categoryIds" not found' };
-  const result = await sequelize.transaction(async (t) => {
+  if (!isCategories) {
+    return { type: 'CATEGORY_NOT_FOUND', message: 'one or more "categoryIds" not found' };
+  }
+    const result = await sequelize.transaction(async (t) => {
     const newPost = await BlogPost.create({ 
       title, content, userId: user.id, updated: Date.now(), published: Date.now() },
-      { 
-        includes: [{ model: Category, as: 'categoryIds' }],
-        transaction: t,
+      { transaction: t, 
       });
     return newPost;
   });
-  console.log('oi', result);
-  return { type: null, message: result };
+  await Promise.all(categoryIds
+    .map((categoryId) => PostCategory.create({ postId: result.dataValues.id, categoryId })));
+  return { type: null, message: result.dataValues };
 };
 
 const getAllPosts = async () => {
