@@ -64,14 +64,11 @@ const createBlogPost = async ({ title, content, categoryIds, authorization }) =>
 const removePost = async (id, authorization) => {
   const user = await decodeToken(authorization);
   const verifyId = await BlogPost.findByPk(id);
-  // console.log('rewr', user.id, verifyId.dataValues);
   if (!verifyId) return { type: 'POST_NOT_FOUND', message: 'Post does not exist' };
   if (user.id !== verifyId.dataValues.userId) {
     return { type: 'UNAUTHORIZED_USER', message: 'Unauthorized user' };
   }
   await BlogPost.destroy({ where: { id } });
-  // const confirm = await BlogPost.findByPk(id);
-  // if (!confirm) 
   return { type: null };
 };
 
