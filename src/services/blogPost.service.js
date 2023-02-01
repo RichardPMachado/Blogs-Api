@@ -61,6 +61,21 @@ const createBlogPost = async ({ title, content, categoryIds, authorization }) =>
   return { type: null, message: result.dataValues };
 };
 
+const updateBlogPost = async (id, title, content, authorization) => {
+  const user = await decodeToken(authorization);
+  const verifyId = async () => getPostById(id);
+  const { message } = await verifyId();
+  if (user.id !== message.userId) {
+    return { type: 'UNAUTHORIZED_USER', message: 'Unauthorized user' };
+  }
+  console.log('sda', await verifyId());
+  await BlogPost.update({ title, content }, { where: { id } });
+  const msg = await verifyId();
+  
+  // if (!updatedPost) return { type: 'UNAUTHORIZED_USER', message: 'Unauthorized user' };
+  return { type: null, message: msg.message };
+};
+
 const removePost = async (id, authorization) => {
   const user = await decodeToken(authorization);
   const verifyId = await BlogPost.findByPk(id);
@@ -77,4 +92,5 @@ module.exports = {
   getAllPosts,
   getPostById,
   removePost,
+  updateBlogPost,
 };

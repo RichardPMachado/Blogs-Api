@@ -25,6 +25,17 @@ const getPostByid = async (req, res) => {
   return res.status(200).json(message);
 };
 
+const updateBlogPost = async (req, res) => {
+  const { id } = req.params;
+  const { authorization } = req.headers;
+  const { title, content } = req.body;
+  const { type, message } = await blogPostService.updateBlogPost(id, title, content, authorization);
+  console.log('asdasasd', message);
+  if (type) return res.status(mapError(type)).json({ message });
+
+  return res.status(200).json(message);
+};
+
 const deletePost = async (req, res) => {
   const { id } = req.params;
   const { authorization } = req.headers;
@@ -35,4 +46,4 @@ const deletePost = async (req, res) => {
   return res.status(204).end();
 };
 
-module.exports = { getAllPosts, createBlogPost, getPostByid, deletePost };
+module.exports = { getAllPosts, createBlogPost, getPostByid, deletePost, updateBlogPost };
