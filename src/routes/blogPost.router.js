@@ -6,8 +6,7 @@ const validatePost = require('../middlewares/validatePost');
 const router = express.Router();
 
 router.get('/', authorizationUser, blogPostController.getAllPosts);
+router.get('/:id', authorizationUser, blogPostController.getPostByid);
 router.post('/', authorizationUser, validatePost, blogPostController.createBlogPost);
-
-// router.get('/:id', authorizationUser, userController.getUserById);
 
 module.exports = router;

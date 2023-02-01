@@ -6,6 +6,41 @@ const { BlogPost,
   } = require('../models');
 const decodeToken = require('../token/decodeToken');
 
+const getAllPosts = async () => {
+  const allPosts = await BlogPost.findAll({
+    attributes: {
+      exclude: ['userId'],
+    },
+    include: [{
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    },
+    {
+      model: Category,
+      as: 'categories',
+    }],
+  });
+  return allPosts;
+};
+
+const getPostById = async (id) => {
+  const post = await BlogPost.findByPk(id, {
+    include: [{ 
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] }, 
+    },
+    {
+      model: Category, 
+      as: 'categories',
+    }],
+  });
+  console.log('qw', post);
+  if (!post) return { type: 'POST_NOT_EXIST', message: 'Post does not exist' };
+  return { type: null, message: post.dataValues };
+};
+
 const createBlogPost = async ({ title, content, categoryIds, authorization }) => {
   const user = await decodeToken(authorization);
   const categoriesPromises = await categoryIds
@@ -27,25 +62,8 @@ const createBlogPost = async ({ title, content, categoryIds, authorization }) =>
   return { type: null, message: result.dataValues };
 };
 
-const getAllPosts = async () => {
-  const allPosts = await BlogPost.findAll({
-    attributes: {
-      exclude: ['userId'],
-    },
-    include: [{
-      model: User,
-      as: 'user',
-      attributes: { exclude: ['password'] },
-    },
-    {
-      model: Category,
-      as: 'categories',
-    }],
-  });
-  return allPosts;
-};
-
 module.exports = { 
   createBlogPost,
   getAllPosts,
+  getPostById,
 };
