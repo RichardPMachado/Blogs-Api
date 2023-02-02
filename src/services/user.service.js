@@ -1,6 +1,7 @@
 const { createUserValidation } = require('./validations/validateInputs');
 const { User } = require('../models');
 const generateToken = require('../token/generateToken');
+const decodeToken = require('../token/decodeToken');
 
 const createUser = async ({ displayName, email, password, image }) => {
   const error = createUserValidation({ displayName, email, password });
@@ -32,8 +33,15 @@ const getUserById = async (id) => {
   return { type: null, message: user };
 };
 
+const removeUser = async (authorization) => {
+  const user = await decodeToken(authorization);
+  await User.destroy({ where: { id: user.id } });
+  return { type: null };
+};
+
 module.exports = {
   createUser,
   getAllUsers,
   getUserById,
+  removeUser,
 };
