@@ -17,6 +17,14 @@ const getAllPosts = async (_req, res) => {
   return res.status(200).json(allPosts);
 };
 
+const getBySearch = async (req, res) => {
+  const { q } = req.query;
+  const { type, message } = await blogPostService.getSearchByQUery(q);
+    if (type) return res.status(mapError(type)).json({ message });
+    console.log('a', type, message);
+  return res.status(200).json(message);
+};
+
 const getPostByid = async (req, res) => {
   const { id } = req.params;
   const { type, message } = await blogPostService.getPostById(id);
@@ -30,7 +38,6 @@ const updateBlogPost = async (req, res) => {
   const { authorization } = req.headers;
   const { title, content } = req.body;
   const { type, message } = await blogPostService.updateBlogPost(id, title, content, authorization);
-  console.log('asdasasd', message);
   if (type) return res.status(mapError(type)).json({ message });
 
   return res.status(200).json(message);
@@ -46,4 +53,11 @@ const deletePost = async (req, res) => {
   return res.status(204).end();
 };
 
-module.exports = { getAllPosts, createBlogPost, getPostByid, deletePost, updateBlogPost };
+module.exports = { 
+  getAllPosts,
+  createBlogPost,
+  getPostByid,
+  deletePost,
+  updateBlogPost,
+  getBySearch,
+};
